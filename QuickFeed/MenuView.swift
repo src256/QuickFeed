@@ -10,6 +10,7 @@ import SwiftUI
 /// メニューバーのドロップダウンメニューを表示するビュー
 struct MenuView: View {
     @EnvironmentObject var feedManager: RSSFeedManager
+    @State private var showingSettings = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -20,6 +21,16 @@ struct MenuView: View {
                 Text("QuickFeed")
                     .font(.headline)
                 Spacer()
+                
+                // 設定ボタン
+                Button(action: {
+                    showingSettings = true
+                }) {
+                    Image(systemName: "gearshape")
+                        .foregroundColor(.secondary)
+                }
+                .buttonStyle(PlainButtonStyle())
+                .help("設定")
                 
                 // 更新ボタン
                 Button(action: {
@@ -106,6 +117,10 @@ struct MenuView: View {
             .padding(.vertical, 6)
         }
         .frame(width: 360)
+        .sheet(isPresented: $showingSettings) {
+            SettingsView()
+                .environmentObject(feedManager)
+        }
     }
     
     private func formatLastUpdate() -> String {
