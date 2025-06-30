@@ -21,6 +21,16 @@ struct MenuView: View {
                     .font(.headline)
                 Spacer()
                 
+                // 設定ボタン
+                Button(action: {
+                    openSettingsWindow()
+                }) {
+                    Image(systemName: "gearshape")
+                        .foregroundColor(.secondary)
+                }
+                .buttonStyle(PlainButtonStyle())
+                .help("設定")
+                
                 // 更新ボタン
                 Button(action: {
                     feedManager.fetchFeed()
@@ -106,6 +116,24 @@ struct MenuView: View {
             .padding(.vertical, 6)
         }
         .frame(width: 360)
+    }
+    
+    private func openSettingsWindow() {
+        let settingsView = SettingsView()
+            .environmentObject(feedManager)
+        
+        let hostingController = NSHostingController(rootView: settingsView)
+        let window = NSWindow(contentViewController: hostingController)
+        
+        window.title = "QuickFeed 設定"
+        window.setContentSize(NSSize(width: 400, height: 200))
+        window.styleMask = [.titled, .closable]
+        window.isReleasedWhenClosed = false
+        window.center()
+        window.makeKeyAndOrderFront(nil)
+        
+        // ウィンドウを最前面に表示
+        NSApp.activate(ignoringOtherApps: true)
     }
     
     private func formatLastUpdate() -> String {

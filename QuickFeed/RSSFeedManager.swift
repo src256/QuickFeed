@@ -16,9 +16,20 @@ class RSSFeedManager: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     
-    private let feedURL = "https://softantenna.com/folders/feed.rss"
+    private let defaultFeedURL = "https://softantenna.com/folders/feed.rss"
+    private let feedURLKey = "RSSFeedURL"
     private let parser = RSSParser()
     private var timer: Timer?
+    
+    /// 現在設定されているRSSフィードのURL
+    var feedURL: String {
+        get {
+            UserDefaults.standard.string(forKey: feedURLKey) ?? defaultFeedURL
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: feedURLKey)
+        }
+    }
     
     init() {
         // アプリ起動時にフィードを取得
@@ -74,6 +85,12 @@ class RSSFeedManager: ObservableObject {
     private func stopAutoUpdate() {
         timer?.invalidate()
         timer = nil
+    }
+    
+    /// RSSフィードのURLを更新し、新しいフィードを取得する
+    func updateFeedURL(_ newURL: String) {
+        feedURL = newURL
+        fetchFeed()
     }
     
     /// 指定されたURLをデフォルトブラウザで開く
