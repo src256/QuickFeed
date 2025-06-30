@@ -90,12 +90,7 @@ struct SettingsView: View {
         }
         
         feedManager.updateFeedURL(tempFeedURL)
-        alertMessage = "設定を保存しました"
-        showingAlert = true
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            dismiss()
-        }
+        dismiss()
     }
 }
 
